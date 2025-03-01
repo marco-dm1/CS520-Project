@@ -6,7 +6,10 @@ This survey software will allow users to post their surveys online anonymously o
 
 
 
-Team Members
+Team Members:
+
 Marco Diaz Moore
+
 Bao Vuong
+
 Samuel Hernandez
