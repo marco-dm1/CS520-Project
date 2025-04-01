@@ -13,3 +13,12 @@ Marco Diaz Moore
 Bao Vuong
 
 Samuel Hernandez
+
+# How to Install & Run:
+
+## Backend
+
+```
+npm install
+npm run app (Runs at localhost:3000)
+```
