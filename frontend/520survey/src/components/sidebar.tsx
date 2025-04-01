@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Layout, List, User, PlusCircle, AlignJustify } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
