@@ -19,7 +19,7 @@ const Sidebar = () => {
     {
       name: 'Login',
       icon: <User className="w-5 h-5 mr-2" />,
-      path: '/frontend/520survey/src/pages/loginsignup.tsx',
+      path: '/login',
     },
   ];
 
@@ -40,7 +40,7 @@ const Sidebar = () => {
 
       {/* Logo Area */}
       <div className={`flex items-center justify-center p-4 ${!isCollapsed && 'mb-8'}`}>
-        <span className={`text-xl font-semibold ${textVisibility}`}>Survey App</span>
+        <span className={`text-xl font-semibold ${textVisibility}`}>FormEase</span>
         {isCollapsed && <Layout className="w-8 h-8" />}
       </div>
 
