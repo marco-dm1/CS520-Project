@@ -18,7 +18,7 @@ function App() {
             </div>
             <div className="flex-1 overflow-auto">
               <Routes>
-                <Route path="/frontend/520survey/src/pages/loginsignup.tsx" element={<LoginPage />} />
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="/create-survey" element={<FormBuilder />} />
                 <Route path="/profile" element={<Profile />} />
               </Routes>

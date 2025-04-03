@@ -19,7 +19,7 @@ const Sidebar = () => {
     {
       name: 'Login',
       icon: <User className="w-5 h-5 mr-2" />,
-      path: '/frontend/520survey/src/pages/loginsignup.tsx',
+      path: '/login',
     },
   ];
 
