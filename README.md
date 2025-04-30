@@ -21,6 +21,7 @@ Samuel Hernandez
 ## Backend
 
 ```
+cd backend
 npm install
 npm run app (Runs at localhost:3000)
 ```
