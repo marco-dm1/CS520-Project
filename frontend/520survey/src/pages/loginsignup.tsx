@@ -14,9 +14,25 @@ const LoginSignup = () => {
 
   const toggleMode = () => setIsLogin(!isLogin);
 
+  const handleClientLogon = (fullname: string, email: string, id: string) => {
+    // Change sidebar name to the new Full Name
+    if(document.getElementById("user_fullname_here")){
+      document.getElementById("user_fullname_here").textContent=fullname;
+    }
+
+    // Store user data to local storage
+    const info = {
+      fullName: name,
+      email: email,
+      id: id
+    };
+    localStorage.setItem('accountInfo', JSON.stringify(info));
+
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!isLogin && !name) {
       alert("Please enter your full name");
       return;
@@ -27,15 +43,58 @@ const LoginSignup = () => {
       return;
     }
 
-    // Store user information
-    const userProfile = {
-      fullName: name,
-      email: email
-    };
-    localStorage.setItem('userProfile', JSON.stringify(userProfile));
+    if(isLogin){
+      // LOGIN
 
-    // In a real application, you would make an API call here
-    // For now, we'll just simulate a successful login/signup
+      console.log("we are logging in");
+      fetch("http://localhost:3000/api/user/login",
+        {
+          method: "GET",
+          body: JSON.stringify({ email: email, pass: password}),
+        }
+      ).then(function(response) {
+        return response.json();
+      }).then(function(data) {
+        console.log(data);
+
+        if(data["status"]){
+          console.log("Successful logon");
+
+          let capturedName = "";
+          let capturedEmail = "";
+          fetch("http://localhost:3000/api/user/login",
+            {
+              method: "GET",
+              body: JSON.stringify({ email: email, pass: password}),
+            }
+          ).then(function(res2) {
+            return res2.json();
+          }).then(function(data2) {
+            console.log(data2);
+    
+            if(data2["status"]){
+              capturedName = data2[1];
+              capturedEmail = data2[2];
+            }else{
+              alert("Error occured when fetching account info! (" + data2[1] + ")");
+            }
+          }).catch(function(err) {
+            console.log('Fetch Error 2', err);
+          });
+
+          handleClientLogon(capturedName, capturedEmail, data[1]);
+        }else{
+          console.log("Failed logon");
+          alert("Incorrect! Password or email are wrong.");
+        }
+      }).catch(function(err) {
+        console.log('Fetch Error 1', err);
+      });
+    }else{
+      // SIGN UP
+
+      console.log("we are signing up");
+    }
     
     // Navigate to profile page after successful login/signup
     navigate('/profile');

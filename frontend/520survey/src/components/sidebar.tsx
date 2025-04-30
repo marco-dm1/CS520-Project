@@ -69,7 +69,7 @@ const Sidebar = () => {
         <hr className="border-gray-800 mb-2" />
         <div className="flex items-center">
           <User className="w-6 h-6 mr-2" />
-          <span>User Name</span>
+          <span id="user_fullname_here">Not Logged In</span>
         </div>
       </div>
     </div>
