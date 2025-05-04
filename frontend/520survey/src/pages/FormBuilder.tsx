@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Plus, Trash2, Type, List, CheckSquare, Star } from 'lucide-react';
+import { Plus, Trash2, Type, List, CheckSquare, Star, Save } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Question {
   id: string;
@@ -13,6 +14,8 @@ const FormBuilder = () => {
   const [formTitle, setFormTitle] = useState('');
   const [formDescription, setFormDescription] = useState('');
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const navigate = useNavigate();
 
   const addQuestion = (type: Question['type']) => {
     const newQuestion: Question = {
@@ -63,6 +66,64 @@ const FormBuilder = () => {
       }
       return q;
     }));
+  };
+
+  const handleSave = async () => {
+    if (!formTitle.trim()) {
+      alert('Please enter a form title');
+      return;
+    }
+
+    if (questions.length === 0) {
+      alert('Please add at least one question');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const accountInfo = localStorage.getItem('accountInfo');
+      if (!accountInfo) {
+        alert('Please log in to save your survey');
+        navigate('/login');
+        return;
+      }
+
+      const surveyData = {
+        title: formTitle,
+        description: formDescription,
+        questions: questions.map(q => ({
+          type: q.type,
+          question: q.question,
+          options: q.options,
+          required: q.required
+        }))
+      };
+
+      const response = await fetch('http://localhost:3000/api/survey/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          accountInfo,
+          surveyData
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.status) {
+        alert('Survey saved successfully!');
+        navigate('/profile');
+      } else {
+        alert('Failed to save survey: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Error saving survey:', error);
+      alert('An error occurred while saving the survey');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -171,35 +232,47 @@ const FormBuilder = () => {
           </div>
         ))}
 
-        <div className="flex space-x-4">
+        <div className="flex justify-between items-center">
+          <div className="flex space-x-8">
+            <button
+              onClick={() => addQuestion('text')}
+              className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              <Type size={20} className="mr-2" />
+              Add Text Question
+            </button>
+            <button
+              onClick={() => addQuestion('multiple-choice')}
+              className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              <List size={20} className="mr-2" />
+              Add Multiple Choice
+            </button>
+            <button
+              onClick={() => addQuestion('checkbox')}
+              className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              <CheckSquare size={20} className="mr-2" />
+              Add Checkbox
+            </button>
+            <button
+              onClick={() => addQuestion('rating')}
+              className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              <Star size={20} className="mr-2" />
+              Add Rating
+            </button>
+       
           <button
-            onClick={() => addQuestion('text')}
-            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            onClick={handleSave}
+            disabled={isSaving}
+            className="flex items-center px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400"
           >
-            <Type size={20} className="mr-2" />
-            Add Text Question
-          </button>
-          <button
-            onClick={() => addQuestion('multiple-choice')}
-            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            <List size={20} className="mr-2" />
-            Add Multiple Choice
-          </button>
-          <button
-            onClick={() => addQuestion('checkbox')}
-            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            <CheckSquare size={20} className="mr-2" />
-            Add Checkbox
-          </button>
-          <button
-            onClick={() => addQuestion('rating')}
-            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            <Star size={20} className="mr-2" />
-            Add Rating
-          </button>
+            <Save size={20} className="mr-2" />
+            {isSaving ? 'Saving...' : 'Save Survey'}
+          
+          </button> 
+           </div>
         </div>
       </div>
     </div>

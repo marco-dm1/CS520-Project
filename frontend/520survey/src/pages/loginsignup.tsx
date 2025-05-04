@@ -14,6 +14,22 @@ const LoginSignup = () => {
 
   const toggleMode = () => setIsLogin(!isLogin);
 
+  const handleClientLogon = (fullname: string, email: string, id: string) => {
+    // Change sidebar name to the new Full Name
+    if(document.getElementById("user_fullname_here")){
+      document.getElementById("user_fullname_here").textContent=fullname;
+    }
+
+    // Store user data to local storage
+    const info = {
+      fullName: name,
+      email: email,
+      id: id
+    };
+    localStorage.setItem('accountInfo', JSON.stringify(info));
+
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     

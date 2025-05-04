@@ -1,10 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Layout, List, User, PlusCircle, AlignJustify } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [userName, setUserName] = useState('Not Logged In');
   const location = useLocation();
+
+  useEffect(() => {
+    // Check localStorage for user info on component mount
+    const accountInfo = localStorage.getItem('accountInfo');
+    if (accountInfo) {
+      const { fullName } = JSON.parse(accountInfo);
+      setUserName(fullName);
+    }
+  }, []);
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
@@ -69,7 +79,11 @@ const Sidebar = () => {
         <hr className="border-gray-800 mb-2" />
         <div className="flex items-center">
           <User className="w-6 h-6 mr-2" />
+<<<<<<< Updated upstream
           <span>User Name</span>
+=======
+          <span>{userName}</span>
+>>>>>>> Stashed changes
         </div>
       </div>
     </div>
